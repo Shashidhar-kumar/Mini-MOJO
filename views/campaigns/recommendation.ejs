@@ -1,0 +1,109 @@
+<%- include('../partials/header') %>
+
+<div class="page-head">
+
+  <div>
+    <h1>Recommended split</h1>
+    <p class="muted"><%= campaign.title %></p>
+  </div>
+
+  <a
+    class="btn"
+    href="/campaigns/<%= campaign._id %>"
+  >
+    Back to campaign
+  </a>
+
+</div>
+
+<%- include('../partials/errors') %>
+
+<% if (rows.length) { %>
+
+  <p class="muted">
+    Only unspent money moves. Channels that deliver cheaper
+    <strong>qualified</strong> applicants get more, and every channel
+    keeps a small floor so it can keep producing data.
+    "Estimated" means nobody has qualified yet, so we assume 30% will.
+  </p>
+
+  <div class="tablewrap">
+  <table>
+
+    <thead>
+      <tr>
+        <th>Channel</th>
+        <th class="n">Spent</th>
+        <th class="n">Cost per qualified</th>
+        <th class="n">Allocated now</th>
+        <th class="n">Recommended</th>
+        <th class="n">Change</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+    <% rows.forEach(function (r) { %>
+
+      <tr>
+
+        <td class="name"><%= r.name %></td>
+
+        <td class="n">
+          <%= money(r.spent) %>
+        </td>
+
+        <td class="n">
+          <%= r.costPerQualified === null
+            ? 'No data'
+            : money(r.costPerQualified) +
+              (r.estimated ? ' (estimated)' : '')
+          %>
+        </td>
+
+        <td class="n">
+          <%= money(r.current) %>
+        </td>
+
+        <td class="n">
+          <%= money(r.recommended) %>
+        </td>
+
+        <td class="n">
+
+          <span
+            class="delta <%= r.change > 0
+              ? 'up'
+              : (r.change < 0 ? 'down' : '')
+            %>"
+          >
+            <%= r.change > 0
+              ? '+'
+              : (r.change < 0 ? '−' : '')
+            %><%= money(Math.abs(r.change)) %>
+          </span>
+
+        </td>
+
+      </tr>
+
+    <% }); %>
+
+    </tbody>
+
+  </table>
+  </div>
+
+  <form
+    method="POST"
+    action="/campaigns/<%= campaign._id %>/recommendation/apply"
+    class="actions"
+  >
+    <button class="btn primary">
+      Apply this split
+    </button>
+  </form>
+
+<% } %>
+
+<%- include('../partials/footer') %>

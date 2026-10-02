@@ -1,0 +1,123 @@
+<%- include('../partials/header') %>
+
+<div class="page-head">
+
+  <div>
+
+    <h1><%= job.title %></h1>
+
+    <p class="muted">
+      <%= job.company %>
+      <%= job.location ? ' · ' + job.location : '' %>
+      · <%= job.status %>
+
+      <% if (job.owner) { %>
+        · Recruiter: <%= job.owner.name %>
+      <% } %>
+    </p>
+
+  </div>
+
+  <div class="rowactions">
+
+    <a
+      class="btn"
+      href="/jobs/<%= job._id %>/edit"
+    >
+      Edit
+    </a>
+
+    <form
+      method="POST"
+      action="/jobs/<%= job._id %>/delete"
+      class="inline"
+      onsubmit="return confirm('Delete this job, its campaigns and applications?')"
+    >
+      <button class="btn danger">Delete</button>
+    </form>
+
+  </div>
+
+</div>
+
+<% if (job.description) { %>
+  <p><%= job.description %></p>
+<% } %>
+
+<p class="muted">
+  <%= applicationCount %> application(s) so far.
+</p>
+
+<div class="page-head">
+
+  <h2>Campaigns for this job</h2>
+
+  <a
+    class="btn primary"
+    href="/campaigns/new?job=<%= job._id %>"
+  >
+    New campaign
+  </a>
+
+</div>
+
+<% if (!rows.length) { %>
+
+  <p class="muted">No campaigns yet.</p>
+
+<% } else { %>
+
+<div class="tablewrap">
+<table>
+
+  <thead>
+    <tr>
+      <th>Campaign</th>
+      <th>Status</th>
+      <th class="n">Spent</th>
+      <th class="n">Applicants</th>
+      <th class="n">CPA</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+  <% rows.forEach(function (r) { %>
+
+    <tr>
+
+      <td class="name">
+        <a href="/campaigns/<%= r.campaign._id %>">
+          <%= r.campaign.title %>
+        </a>
+      </td>
+
+      <td><%= r.campaign.status %></td>
+
+      <td class="n">
+        <%= money(r.summary.totalSpent) %>
+      </td>
+
+      <td class="n">
+        <%= r.summary.totalApps %>
+      </td>
+
+      <td class="n">
+        <%= r.summary.totalApps
+          ? money(r.summary.avgCPA)
+          : '–'
+        %>
+      </td>
+
+    </tr>
+
+  <% }); %>
+
+  </tbody>
+
+</table>
+</div>
+
+<% } %>
+
+<%- include('../partials/footer') %>

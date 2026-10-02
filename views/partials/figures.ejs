@@ -1,0 +1,32 @@
+<section class="figures auto">
+
+  <div class="fig">
+    <div class="k">Spent so far</div>
+    <div class="v"><%= money(totals.spent) %></div>
+  </div>
+
+  <div class="fig">
+    <div class="k">Applicants</div>
+    <div class="v"><%= totals.apps %></div>
+  </div>
+
+  <div class="fig">
+    <div class="k">Qualified applicants</div>
+    <div class="v"><%= totals.qualifiedApps %></div>
+  </div>
+
+  <div class="fig">
+    <div class="k">Cost per applicant</div>
+    <div class="v">
+      <%= totals.apps ? money(totals.cpa) : '–' %>
+    </div>
+  </div>
+
+  <div class="fig">
+    <div class="k">Cost per qualified applicant</div>
+    <div class="v">
+      <%= totals.qualifiedApps ? money(totals.qualifiedCPA) : '–' %>
+    </div>
+  </div>
+
+</section>

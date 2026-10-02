@@ -1,0 +1,173 @@
+<%- include('../partials/header') %>
+
+<div class="page-head">
+
+  <h1>Admin</h1>
+
+  <a class="btn" href="/platforms/new">
+    New platform
+  </a>
+
+</div>
+
+<%- include('../partials/figures', { totals: stats.totals }) %>
+
+<h2>Users</h2>
+
+<div class="tablewrap">
+<table>
+
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Role</th>
+      <th class="n">Jobs</th>
+      <th class="n">Campaigns</th>
+      <th class="n">Applications</th>
+      <th class="n">Spent</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+  <% userRows.forEach(function (r) { %>
+
+    <tr>
+
+      <td class="name">
+        <%= r.user.name %>
+      </td>
+
+      <td>
+        <%= r.user.email %>
+      </td>
+
+      <td>
+        <span class="badge">
+          <%= r.user.role %>
+        </span>
+      </td>
+
+      <td class="n"><%= r.jobs %></td>
+      <td class="n"><%= r.campaigns %></td>
+      <td class="n"><%= r.applications %></td>
+
+      <td class="n">
+        <%= money(r.spent) %>
+      </td>
+
+      <td class="n">
+
+        <% if (String(r.user._id) !== String(user._id)) { %>
+
+          <div class="rowactions">
+
+            <form
+              method="POST"
+              action="/admin/users/<%= r.user._id %>/role"
+              class="inline"
+            >
+              <button class="linkbtn">
+                <%= r.user.role === 'admin'
+                  ? 'Make recruiter'
+                  : 'Make admin'
+                %>
+              </button>
+            </form>
+
+            <form
+              method="POST"
+              action="/admin/users/<%= r.user._id %>/delete"
+              class="inline"
+              onsubmit="return confirm('Delete this user and ALL their data?')"
+            >
+              <button class="linkbtn">
+                Delete
+              </button>
+            </form>
+
+          </div>
+
+        <% } else { %>
+
+          <span class="muted">You</span>
+
+        <% } %>
+
+      </td>
+
+    </tr>
+
+  <% }); %>
+
+  </tbody>
+
+</table>
+</div>
+
+<h2 class="gap">
+  Latest campaigns (all recruiters)
+</h2>
+
+<div class="tablewrap">
+<table>
+
+  <thead>
+    <tr>
+      <th>Campaign</th>
+      <th>Recruiter</th>
+      <th>Status</th>
+      <th class="n">Spent</th>
+      <th class="n">CPA</th>
+      <th class="n">Qualified CPA</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+  <% rows.forEach(function (r) {
+       var c = r.campaign,
+           s = r.summary;
+  %>
+
+    <tr>
+
+      <td class="name">
+        <a href="/campaigns/<%= c._id %>">
+          <%= c.title %>
+        </a>
+      </td>
+
+      <td>
+        <%= c.owner ? c.owner.name : '–' %>
+      </td>
+
+      <td><%= c.status %></td>
+
+      <td class="n">
+        <%= money(s.totalSpent) %>
+      </td>
+
+      <td class="n">
+        <%= s.totalApps ? money(s.avgCPA) : '–' %>
+      </td>
+
+      <td class="n">
+        <%= s.totalQualified
+          ? money(s.qualifiedCPA)
+          : '–'
+        %>
+      </td>
+
+    </tr>
+
+  <% }); %>
+
+  </tbody>
+
+</table>
+</div>
+
+<%- include('../partials/footer') %>

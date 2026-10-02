@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <title>
+    <%= title %> · Mini-MOJO
+  </title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/app.css">
+
+</head>
+
+<body>
+
+  <%- include('partials/nav') %>
+
+  <main class="wrap">
+
+    <% if (msg) { %>
+      <p class="msg" role="status">
+        <%= msg %>
+      </p>
+    <% } %>
+
+    <section class="hero">
+
+      <div>
+
+        <h1 id="title"></h1>
+
+        <p class="sub">
+          Total budget
+          <strong id="budget"></strong>.
+          Every dollar not yet spent can move to the channel
+          that brings applicants cheapest.
+        </p>
+
+      </div>
+
+      <span id="status" class="status"></span>
+
+    </section>
+
+    <section aria-label="Budget split by channel">
+
+      <div id="strip" class="strip"></div>
+
+      <ul id="legend" class="legend"></ul>
+
+    </section>
+
+    <section class="figures" id="figures"></section>
+
+    <section class="actions">
+
+      <button id="btnSim" class="btn">
+        Simulate a day
+      </button>
+
+      <button id="btnOpt" class="btn primary">
+        Rebalance budget
+      </button>
+
+      <a
+        class="btn"
+        href="/campaigns/<%= campaignId %>/recommendation"
+      >
+        Recommended split
+      </a>
+
+      <button id="btnReset" class="btn ghost">
+        Load sample data
+      </button>
+
+      <a
+        class="btn ghost"
+        href="/campaigns/<%= campaignId %>/edit"
+      >
+        Edit campaign
+      </a>
+
+      <p
+        id="note"
+        class="note"
+        role="status"
+        aria-live="polite"
+      ></p>
+
+    </section>
+
+    <section class="cols">
+
+      <div>
+
+        <h2>Channels</h2>
+
+        <div class="tablewrap">
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>Channel</th>
+                <th class="n">Allocated</th>
+                <th class="n">Spent</th>
+                <th class="n">Applicants</th>
+                <th class="n">Cost per applicant</th>
+              </tr>
+
+            </thead>
+
+            <tbody id="rows"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+      <div>
+
+        <h2>Cost per applicant</h2>
+
+        <div class="chartbox">
+
+          <canvas
+            id="cpaChart"
+            aria-label="Cost per applicant by channel"
+          ></canvas>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <section>
+
+      <h2>What the optimizer did</h2>
+
+      <ol
+        id="history"
+        class="history"
+      ></ol>
+
+    </section>
+
+  </main>
+
+  <script type="application/json" id="boot">
+    <%- boot %>
+  </script>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"
+  ></script>
+
+  <script src="/js/dashboard.js"></script>
+
+</body>
+
+</html>

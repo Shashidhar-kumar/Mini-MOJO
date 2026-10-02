@@ -1,0 +1,143 @@
+<%- include('../partials/header') %>
+
+<div class="page-head">
+  <h1><%= heading %></h1>
+</div>
+
+<%- include('../partials/errors') %>
+
+<form method="POST" action="<%= action %>" class="form">
+
+  <% if (!isEdit) { %>
+
+    <label>
+      Campaign
+
+      <select name="campaign" required>
+
+        <option value="">
+          Choose a campaign
+        </option>
+
+        <% campaigns.forEach(function (c) { %>
+
+          <option
+            value="<%= c._id %>"
+            <%= String(application.campaign) === String(c._id)
+              ? 'selected'
+              : ''
+            %>
+          >
+            <%= c.title %>
+          </option>
+
+        <% }); %>
+
+      </select>
+
+    </label>
+
+    <label>
+      Platform it came from
+
+      <select name="publisher" required>
+
+        <option value="">
+          Choose a platform
+        </option>
+
+        <% platforms.forEach(function (p) { %>
+
+          <option
+            <%= application.publisher === p.name
+              ? 'selected'
+              : ''
+            %>
+          >
+            <%= p.name %>
+          </option>
+
+        <% }); %>
+
+      </select>
+
+    </label>
+
+  <% } else { %>
+
+    <p class="muted">
+      Campaign:
+      <%= application.campaign && application.campaign.title
+        ? application.campaign.title
+        : '–'
+      %>
+      · Platform: <%= application.publisher %>
+    </p>
+
+  <% } %>
+
+  <label>
+    Candidate name
+
+    <input
+      name="candidateName"
+      value="<%= application.candidateName || '' %>"
+      required
+    >
+  </label>
+
+  <label>
+    Email
+
+    <input
+      type="email"
+      name="email"
+      value="<%= application.email || '' %>"
+      required
+    >
+  </label>
+
+  <label>
+    Status
+
+    <select name="status">
+
+      <% statuses.forEach(function (s) { %>
+
+        <option
+          <%= application.status === s
+            ? 'selected'
+            : ''
+          %>
+        >
+          <%= s %>
+        </option>
+
+      <% }); %>
+
+    </select>
+
+  </label>
+
+  <label>
+    Notes
+
+    <textarea
+      name="notes"
+      rows="3"
+    ><%= application.notes || '' %></textarea>
+
+  </label>
+
+  <p class="muted">
+    "Qualified" and "Hired" count toward your cost per qualified applicant.
+  </p>
+
+  <div class="rowactions">
+    <button class="btn primary">Save</button>
+    <a href="/applications">Cancel</a>
+  </div>
+
+</form>
+
+<%- include('../partials/footer') %>

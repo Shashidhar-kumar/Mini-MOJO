@@ -1,0 +1,75 @@
+<%- include('../partials/header') %>
+
+<div class="page-head">
+  <h1>Jobs</h1>
+  <a class="btn primary" href="/jobs/new">New job</a>
+</div>
+
+<% if (!jobs.length) { %>
+
+  <p class="muted">
+    No jobs yet. Create one, then start a campaign for it.
+  </p>
+
+<% } else { %>
+
+<div class="tablewrap">
+<table>
+
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Company</th>
+      <th>Location</th>
+      <th>Status</th>
+
+      <% if (user.role === 'admin') { %>
+        <th>Recruiter</th>
+      <% } %>
+
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+  <% jobs.forEach(function (j) { %>
+
+    <tr>
+
+      <td class="name">
+        <a href="/jobs/<%= j._id %>">
+          <%= j.title %>
+        </a>
+      </td>
+
+      <td><%= j.company %></td>
+
+      <td><%= j.location || '–' %></td>
+
+      <td>
+        <span class="badge <%= j.status.toLowerCase() %>">
+          <%= j.status %>
+        </span>
+      </td>
+
+      <% if (user.role === 'admin') { %>
+        <td><%= j.owner ? j.owner.name : '–' %></td>
+      <% } %>
+
+      <td class="n">
+        <a href="/jobs/<%= j._id %>/edit">Edit</a>
+      </td>
+
+    </tr>
+
+  <% }); %>
+
+  </tbody>
+
+</table>
+</div>
+
+<% } %>
+
+<%- include('../partials/footer') %>

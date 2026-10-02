@@ -1,0 +1,48 @@
+<%- include('../partials/header') %>
+<div class="page-head"><h1><%= isEdit ? 'Edit campaign' : 'New campaign' %></h1></div>
+<%- include('../partials/errors') %>
+<form method="POST" action="<%= action %>" class="form">
+  <label>Title <input name="title" value="<%= values.title || '' %>" required></label>
+
+  <% if (!isEdit) { %>
+    <% if (jobs.length) { %>
+      <label>Job
+        <select name="job">
+          <option value="">Choose an existing job</option>
+          <% jobs.forEach(function (j) { %><option value="<%= j._id %>" <%= String(values.job) === String(j._id) ? 'selected' : '' %>><%= j.title %> · <%= j.company %></option><% }); %>
+        </select>
+      </label>
+    <% } else { %>
+      <p class="muted">You have no open jobs yet. Fill in the new job below, or <a href="/jobs/new">create one on the Jobs page</a>.</p>
+    <% } %>
+    <fieldset style="display:grid;gap:14px">
+      <legend><%= jobs.length ? 'Or create a new job for this campaign' : 'New job for this campaign' %></legend>
+      <label>Job title <input name="newJobTitle" value="<%= values.newJobTitle || '' %>" placeholder="e.g. Software Developer (SDE)"></label>
+      <label>Company <input name="newJobCompany" value="<%= values.newJobCompany || '' %>"></label>
+      <label>Location <input name="newJobLocation" value="<%= values.newJobLocation || '' %>"></label>
+    </fieldset>
+    <label>Total budget ($) <input type="number" name="totalBudget" min="1" step="0.01" value="<%= values.totalBudget || '' %>" required></label>
+    <fieldset class="checks">
+      <legend>Platforms (budget is split evenly at first)</legend>
+      <% platforms.forEach(function (p) { %>
+        <label><input type="checkbox" name="platforms" value="<%= p._id %>" <%= values.platforms.map(String).includes(String(p._id)) ? 'checked' : '' %>> <%= p.name %></label>
+      <% }); %>
+    </fieldset>
+  <% } else { %>
+    <label>Status
+      <select name="status">
+        <% ['Active', 'Optimized', 'Paused', 'Completed'].forEach(function (s) { %><option <%= values.status === s ? 'selected' : '' %>><%= s %></option><% }); %>
+      </select>
+    </label>
+    <p class="muted">Budget: <%= money(values.totalBudget) %> (rebalance it from the campaign dashboard).</p>
+  <% } %>
+
+  <div class="rowactions"><button class="btn primary">Save</button><a href="/campaigns">Cancel</a></div>
+</form>
+
+<% if (isEdit) { %>
+  <form method="POST" action="/campaigns/<%= values._id %>/delete" onsubmit="return confirm('Delete this campaign and its applications?')">
+    <button class="btn danger">Delete campaign</button>
+  </form>
+<% } %>
+<%- include('../partials/footer') %>

@@ -1,0 +1,97 @@
+<%- include('../partials/header') %>
+
+<div class="page-head">
+
+  <h1>Platforms</h1>
+
+  <% if (user.role === 'admin') { %>
+    <a class="btn primary" href="/platforms/new">
+      New platform
+    </a>
+  <% } %>
+
+</div>
+
+<p class="muted">
+  Simulated data: until real job board APIs are connected,
+  each platform's CPA and quality rate drive the fake applicants.
+</p>
+
+<div class="tablewrap">
+<table>
+
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Cost model</th>
+      <th class="n">Simulated CPA</th>
+      <th class="n">Quality rate</th>
+      <th>Status</th>
+
+      <% if (user.role === 'admin') { %>
+        <th></th>
+      <% } %>
+    </tr>
+  </thead>
+
+  <tbody>
+
+  <% platforms.forEach(function (p) { %>
+
+    <tr>
+
+      <td class="name">
+        <%= p.name %>
+      </td>
+
+      <td><%= p.costModel %></td>
+
+      <td class="n">
+        <%= money(p.simulatedCPA) %>
+      </td>
+
+      <td class="n">
+        <%= Math.round(p.qualityRate * 100) %>%
+      </td>
+
+      <td>
+        <%= p.active ? 'Active' : 'Inactive' %>
+      </td>
+
+      <% if (user.role === 'admin') { %>
+
+        <td class="n">
+
+          <div class="rowactions">
+
+            <a href="/platforms/<%= p._id %>/edit">
+              Edit
+            </a>
+
+            <form
+              method="POST"
+              action="/platforms/<%= p._id %>/delete"
+              class="inline"
+              onsubmit="return confirm('Delete this platform?')"
+            >
+              <button class="linkbtn">
+                Delete
+              </button>
+            </form>
+
+          </div>
+
+        </td>
+
+      <% } %>
+
+    </tr>
+
+  <% }); %>
+
+  </tbody>
+
+</table>
+</div>
+
+<%- include('../partials/footer') %>

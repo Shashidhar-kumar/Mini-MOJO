@@ -1,0 +1,89 @@
+<%- include('../partials/header') %>
+
+<div class="page-head">
+  <h1><%= heading %></h1>
+</div>
+
+<%- include('../partials/errors') %>
+
+<form method="POST" action="<%= action %>" class="form">
+
+  <label>
+    Name
+
+    <input
+      name="name"
+      value="<%= platform.name || '' %>"
+      required
+    >
+  </label>
+
+  <label>
+    Cost model
+
+    <select name="costModel">
+
+      <% ['CPC', 'CPA', 'Flat'].forEach(function (m) { %>
+
+        <option
+          <%= platform.costModel === m
+            ? 'selected'
+            : ''
+          %>
+        >
+          <%= m %>
+        </option>
+
+      <% }); %>
+
+    </select>
+
+  </label>
+
+  <label>
+    Simulated cost per applicant ($)
+
+    <input
+      type="number"
+      name="simulatedCPA"
+      min="0.01"
+      step="0.01"
+      value="<%= platform.simulatedCPA %>"
+      required
+    >
+  </label>
+
+  <label>
+    Quality rate (0 to 1, share of applicants who qualify)
+
+    <input
+      type="number"
+      name="qualityRate"
+      min="0"
+      max="1"
+      step="0.01"
+      value="<%= platform.qualityRate %>"
+      required
+    >
+  </label>
+
+  <label class="check">
+
+    <input
+      type="checkbox"
+      name="active"
+      <%= platform.active ? 'checked' : '' %>
+    >
+
+    Active (available for new campaigns)
+
+  </label>
+
+  <div class="rowactions">
+    <button class="btn primary">Save</button>
+    <a href="/platforms">Cancel</a>
+  </div>
+
+</form>
+
+<%- include('../partials/footer') %>

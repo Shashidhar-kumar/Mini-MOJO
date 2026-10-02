@@ -1,0 +1,101 @@
+<%- include('../partials/header') %>
+
+<div class="page-head">
+  <h1>Analytics</h1>
+</div>
+
+<%- include('../partials/figures', { totals: stats.totals }) %>
+
+<h2>By platform</h2>
+
+<p class="muted">
+  CPA = spend ÷ applicants.
+  Cost per qualified applicant = spend ÷ qualified applicants.
+  A cheap channel can still be expensive once quality is counted.
+</p>
+
+<% if (!stats.platforms.length) { %>
+
+  <p class="muted">No data yet.</p>
+
+<% } else { %>
+
+<div class="tablewrap">
+<table>
+
+  <thead>
+    <tr>
+      <th>Platform</th>
+      <th class="n">Spent</th>
+      <th class="n">Applicants</th>
+      <th class="n">Qualified</th>
+      <th class="n">Qualified %</th>
+      <th class="n">CPA</th>
+      <th class="n">Qualified CPA</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+  <% stats.platforms.forEach(function (p) { %>
+
+    <tr>
+
+      <td class="name">
+        <%= p.name %>
+      </td>
+
+      <td class="n">
+        <%= money(p.spent) %>
+      </td>
+
+      <td class="n">
+        <%= p.apps %>
+      </td>
+
+      <td class="n">
+        <%= p.qualifiedApps %>
+      </td>
+
+      <td class="n">
+        <%= p.qualRate %>%
+      </td>
+
+      <td class="n">
+        <%= p.apps ? money(p.cpa) : '–' %>
+      </td>
+
+      <td class="n">
+        <%= p.qualifiedApps
+          ? money(p.qualifiedCPA)
+          : '–'
+        %>
+      </td>
+
+    </tr>
+
+  <% }); %>
+
+  </tbody>
+
+</table>
+</div>
+
+<% } %>
+
+<h2 class="gap">Application funnel</h2>
+
+<ul class="plain">
+
+  <% Object.keys(funnel).forEach(function (k) { %>
+
+    <li>
+      <%= k %>:
+      <strong><%= funnel[k] %></strong>
+    </li>
+
+  <% }); %>
+
+</ul>
+
+<%- include('../partials/footer') %>

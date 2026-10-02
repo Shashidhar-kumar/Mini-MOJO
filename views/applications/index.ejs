@@ -1,0 +1,158 @@
+<%- include('../partials/header') %>
+
+<div class="page-head">
+
+  <h1>Applications</h1>
+
+  <a
+    class="btn primary"
+    href="/applications/new"
+  >
+    Add application
+  </a>
+
+</div>
+
+<form
+  method="GET"
+  action="/applications"
+  class="filters"
+>
+
+  <select name="campaign">
+
+    <option value="">
+      All campaigns
+    </option>
+
+    <% campaigns.forEach(function (c) { %>
+
+      <option
+        value="<%= c._id %>"
+        <%= query.campaign === String(c._id)
+          ? 'selected'
+          : ''
+        %>
+      >
+        <%= c.title %>
+      </option>
+
+    <% }); %>
+
+  </select>
+
+  <select name="status">
+
+    <option value="">
+      All statuses
+    </option>
+
+    <% statuses.forEach(function (s) { %>
+
+      <option
+        <%= query.status === s ? 'selected' : '' %>
+      >
+        <%= s %>
+      </option>
+
+    <% }); %>
+
+  </select>
+
+  <button class="btn">Filter</button>
+
+</form>
+
+<% if (!applications.length) { %>
+
+  <p class="muted">
+    No applications found.
+  </p>
+
+<% } else { %>
+
+<div class="tablewrap">
+<table>
+
+  <thead>
+    <tr>
+      <th>Candidate</th>
+      <th>Email</th>
+      <th>Campaign</th>
+      <th>Platform</th>
+      <th>Status</th>
+      <th>Added</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+  <% applications.forEach(function (a) { %>
+
+    <tr>
+
+      <td class="name">
+        <%= a.candidateName %>
+      </td>
+
+      <td>
+        <%= a.email %>
+      </td>
+
+      <td>
+        <%= a.campaign
+          ? a.campaign.title
+          : '–'
+        %>
+      </td>
+
+      <td>
+        <%= a.publisher %>
+      </td>
+
+      <td>
+        <span class="badge <%= a.status.toLowerCase() %>">
+          <%= a.status %>
+        </span>
+      </td>
+
+      <td>
+        <%= a.createdAt.toLocaleDateString() %>
+      </td>
+
+      <td class="n">
+
+        <div class="rowactions">
+
+          <a href="/applications/<%= a._id %>/edit">
+            Edit
+          </a>
+
+          <form
+            method="POST"
+            action="/applications/<%= a._id %>/delete"
+            class="inline"
+            onsubmit="return confirm('Delete this application?')"
+          >
+            <button class="linkbtn">
+              Delete
+            </button>
+          </form>
+
+        </div>
+
+      </td>
+
+    </tr>
+
+  <% }); %>
+
+  </tbody>
+
+</table>
+</div>
+
+<% } %>
+
+<%- include('../partials/footer') %>

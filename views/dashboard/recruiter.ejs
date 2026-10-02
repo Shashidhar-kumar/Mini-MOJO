@@ -1,0 +1,136 @@
+<%- include('../partials/header') %>
+
+<div class="page-head">
+
+  <h1>Dashboard</h1>
+
+  <div class="rowactions">
+    <a class="btn" href="/jobs/new">New job</a>
+    <a class="btn primary" href="/campaigns/new">New campaign</a>
+  </div>
+
+</div>
+
+<%- include('../partials/figures', { totals: stats.totals }) %>
+
+<p class="muted">
+  <%= jobCount %> job(s) ·
+  <%= rows.length %> campaign(s) ·
+  Funnel:
+  <%= funnel.New %> new,
+  <%= funnel.Screened %> screened,
+  <%= funnel.Qualified %> qualified,
+  <%= funnel.Hired %> hired,
+  <%= funnel.Rejected %> rejected
+</p>
+
+<h2>Your campaigns</h2>
+
+<% if (!rows.length) { %>
+
+  <p class="muted">No campaigns yet.</p>
+
+<% } else { %>
+
+<div class="tablewrap">
+<table>
+
+  <thead>
+    <tr>
+      <th>Campaign</th>
+      <th>Job</th>
+      <th>Status</th>
+      <th class="n">Spent</th>
+      <th class="n">Applicants</th>
+      <th class="n">CPA</th>
+      <th class="n">Qualified CPA</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+  <% rows.forEach(function (r) {
+       var c = r.campaign,
+           s = r.summary;
+  %>
+
+    <tr>
+
+      <td class="name">
+        <a href="/campaigns/<%= c._id %>">
+          <%= c.title %>
+        </a>
+      </td>
+
+      <td>
+        <%= c.job ? c.job.title : '–' %>
+      </td>
+
+      <td>
+        <span class="badge <%= c.status.toLowerCase() %>">
+          <%= c.status %>
+        </span>
+      </td>
+
+      <td class="n">
+        <%= money(s.totalSpent) %>
+      </td>
+
+      <td class="n">
+        <%= s.totalApps %>
+      </td>
+
+      <td class="n">
+        <%= s.totalApps ? money(s.avgCPA) : '–' %>
+      </td>
+
+      <td class="n">
+        <%= s.totalQualified
+          ? money(s.qualifiedCPA)
+          : '–'
+        %>
+      </td>
+
+    </tr>
+
+  <% }); %>
+
+  </tbody>
+
+</table>
+</div>
+
+<% } %>
+
+<h2 class="gap">Recent applications</h2>
+
+<% if (!recentApps.length) { %>
+
+  <p class="muted">
+    Nothing yet. Open a campaign and click "Simulate a day".
+  </p>
+
+<% } else { %>
+
+<ul class="plain">
+
+  <% recentApps.forEach(function (a) { %>
+
+    <li>
+      <strong><%= a.candidateName %></strong>
+      via <%= a.publisher %>
+      · <%= a.campaign ? a.campaign.title : '' %>
+      ·
+
+      <span class="badge <%= a.status.toLowerCase() %>">
+        <%= a.status %>
+      </span>
+    </li>
+
+  <% }); %>
+
+</ul>
+
+<% } %>
+
+<%- include('../partials/footer') %>
